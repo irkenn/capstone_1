@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Check out this thread!</h1>
+
+
+
+{% if item_type == "albums" %}
+<div class="col-lg-4 col-md-6 col-12">
+    <div class="card user-card">
+      <div class="card-inner">
+        <div class="card-contents">
+          {% if spotify_item.images %}
+            <img src=" {{ spotify_item.images[1].url }}" alt="image of the artist" class="card-image">
+          {% else %}
+            <img src="/static/images/default-pic.png" alt="image of the artist" class="card-image">
+          {% endif %}
+          <p>{{ spotify_item.name }}</p>
+          {% set artist_list = [] %}
+          {% for artist in spotify_item.artists %}
+          {% set _ = artist_list.append(artist.name) %}
+          {% endfor %}
+          <p> {{ artist_list|join(", ") }} </p>
+          <p>{{ spotify_item['release_date'][0:4]}}</p>
+          <p> Tracks: {{ spotify_item['total_tracks'] }}</p>
+          <a href="{{ spotify_item.external_urls.spotify }}" target="_blank">check album on Spotify!</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  {% elif item_type == "tracks" %}    
+  <div class="col-lg-4 col-md-6 col-12">
+    <div class="card user-card">
+      <div class="card-inner">
+        <div class="card-contents">
+          <p id="track-name">{{ spotify_item.name }}</p>
+          {% set artist_list = [] %}
+          {% for artist in spotify_item.artists %}
+          {% set _ = artist_list.append(artist.name) %}
+          {% endfor %}
+          <p> {{ artist_list|join(", ") }} </p>
+          <p id="album"> {{ spotify_item.album.name }}</p>
+          
+          {% if spotify_item.album.images %}
+            <img src=" {{ spotify_item.album.images[1].url }}" alt="image of the artist" class="card-image">
+          {% else %}
+            <img src="/static/images/default-pic.png" alt="missing image of the artist" class="card-image">
+          {% endif %}
+          <p> {{ spotify_item.album.release_date[0:4]}}</p>
+          <a href="{{ spotify_item.external_urls.spotify }}" target="_blank">check track on Spotify!</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% elif item_type == "artists" %}
+<div class="col-lg-4 col-md-6 col-12">
+  <div class="card user-card">
+    <div class="card-inner">
+      <div class="card-contents">
+        <p id="artist-name">{{ spotify_item.name }}</p>
+        {% if spotify_item.images %}
+          <img src=" {{ spotify_item.images[1].url }}" alt="image of the artist" class="card-image">
+        {% else %}
+          <img src="/static/images/default-pic.png" alt="image of the artist" class="card-image">
+        {% endif %}
+        <p>{{ '{:,}'.format(spotify_item['followers']['total']) }} following</p>
+        <a href="{{ spotify_item.external_urls.spotify }}" target="_blank">check artist on Spotify!</a>
+    </div>
+  </div>
+</div>
+</div>
+{% endif %}
+
+
+
+{% endblock %}

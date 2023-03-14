@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+
+<h1>You made it to here</h1>
+
+<h2>{{user.username}}</h2>
+
+
+<a href="/users/{{user.id}}/edit" class="btn btn-primary">Edit profile</a>
+
+<a href="/users/{{user.id}}/delete" class="btn btn-danger">Delete profile</a>
+
+
+
+
+{% endblock %}

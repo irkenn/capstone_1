@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{{user.username}} confirm that you want to delete you account</h1>
+
+<h4>Please check the box and type your password</h4>
+<form method="POST" id="user_form">
+    {{ form.hidden_tag() }}
+
+    {% for field in form if field.widget.input_type != 'hidden' %}
+      
+        {% for error in field.errors %}
+            <span class="text-danger">{{ error }}</span>
+        {% endfor %}
+      
+        {% if field.type == "BooleanField" %}
+        <div class="form-check">
+            {{ field(class="form-check-input") }} {{ field.label(class="form-check-label") }}
+        </div>
+        {% else %}
+        {{ field(placeholder=field.label.text, class="form-control") }}
+        {% endif %}
+        {% endfor %}
+
+    <button class="btn btn-danger btn-lg btn-block">Confirm delete</button>
+  </form>
+
+  <a href="/users/{{user.id}}" class="btn btn-primary">Cancel</a>
+
+{% endblock %}
