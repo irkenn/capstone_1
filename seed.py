@@ -1,5 +1,5 @@
 from app import app
-from models import db, User, SpotifyContent, Artist, ArtistTrack, ArtistAlbum, Track, Album, Thread
+from models import db, User, SpotifyContent, Artist, ArtistTrack, ArtistAlbum, Track, Album, Thread, Comment, ThreadVote, SubComment
 
 
 db.drop_all()
@@ -149,34 +149,63 @@ t2 = Thread(user_id=2,
             title="Two threads about the same content", 
             description="Apparently, yes")
 
-# c1 = Comment(user_id=1, 
-#              thread_id=1, 
-#              content = "This is a comment on a thread")
-
-# v1 = ThreadVote(user_id=1,
-#                 thread_id=1,
-#                 vote=1)
-
-# v2 = ThreadVote(user_id=2,
-#                 thread_id=1,
-#                 vote=1)
-
-# v3 = ThreadVote(user_id=1,
-#                 thread_id=2,
-#                 vote=-1)
-
-# v4 = ThreadVote(user_id=2,
-#                 thread_id=2,
-#                 vote=-1)
+t3 = Thread(user_id=1,
+            spotify_content_id = '4Z8W4fKeB5YxbusRsdQVPb', 
+            title="Third thread about the same content", 
+            description= "Another description")
 
 db.session.add_all([t1,
-                    t2
-                    # c1,
-                    # v1,
-                    # v2,
-                    # v3,
-                    # v4,
+                    t2,
+                    t3])
+
+db.session.commit()
+
+
+
+c1 = Comment(user_id=1, 
+             thread_id=1, 
+             content = "This is a comment on thread No.1")
+
+c2 = Comment(user_id=2, 
+             thread_id=1, 
+             content = "This is a second comment on thread No.1")
+
+
+v1 = ThreadVote(user_id=1,
+                thread_id=1,
+                vote=1)
+
+v2 = ThreadVote(user_id=2,
+                thread_id=1,
+                vote=1)
+
+v3 = ThreadVote(user_id=1,
+                thread_id=2,
+                vote=-1)
+
+v4 = ThreadVote(user_id=2,
+                thread_id=2,
+                vote=-1)
+
+db.session.add_all([c1, 
+                    c2,
+                    v1,
+                    v2,
+                    v3,
+                    v4
                     ])
 db.session.commit()
 
 
+sc1 = SubComment(user_id=1, 
+             comment_id=1, 
+             content = "This is a comment by user 1 on comment 1 on thread No.1")
+
+sc2 = SubComment(user_id=2, 
+                comment_id=1, 
+                content = "This is a comment by user 2 on comment 1 on thread No.1")
+
+db.session.add_all([sc1, 
+                    sc2])
+
+db.session.commit()
