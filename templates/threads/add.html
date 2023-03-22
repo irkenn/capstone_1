@@ -23,7 +23,7 @@
                 <a href="{{ spotify_item.external_urls.spotify }}" target="_blank">check album on Spotify!</a>
                 <form action="/threads/{{spotify_item.id}}/add"  >
                     <input type="hidden" name="item_type" value="album">
-                    
+                    <button class="btn btn-primary btn-sm">Add thread</button>
                 </form>
             </div>
         </div>
@@ -52,7 +52,7 @@
                 <a href="{{ spotify_item.external_urls.spotify }}" target="_blank">check track on Spotify!</a>
                 <form action="/threads/{{spotify_item.id}}/add" >
                     <input type="hidden" name="item_type" value="track">
-                    
+                    <button class="btn btn-primary btn-sm">Add thread</button>
                 </form>
             </div>
         </div>
@@ -74,7 +74,7 @@
                 <a href="{{ spotify_item.external_urls.spotify }}" target="_blank">check artist on Spotify!</a>
                 <form action="/threads/{{spotify_item.id}}/add">
                     <input type="hidden" name="item_type" value="artist">
-                    
+                    <button class="btn btn-primary btn-sm">Add thread</button>
                 </form>
             </div>
         </div>

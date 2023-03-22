@@ -136,9 +136,14 @@ def delete_userpage(user_id):
 ##############################################################################
 #Search pages
 
+@app.route('/search/<item_name>', methods=['GET', 'POST'])
+def search_items(item_name):
+    """This will query """
+
+
 
 @app.route('/search/API', methods=['GET', 'POST'])
-def search_items():
+def search_items_in_API():
     """Searches in the Spotify API """
     if not g.user:
         return redirect('/login')
@@ -162,6 +167,14 @@ def start_new_thread(spotify_id):
 
 
 
+@app.route('/threads/<spotify_id>', methods=['GET', 'POST'])
+def show_thread_details(spotify_id):
+    """ This will show a thread and will receive upvotes or downvotes """
+
+    if not g.user:
+        return redirect('/login')
+
+    return ThreadTools.show_thread(request, spotify_id, session["SPOTIFY_COMMENTS_USER_KEY"])   
 #This is an example of how maybe it could work
 # @app.route('/threads/new', methods=['GET', 'POST'])
 # def new_thread():

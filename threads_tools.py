@@ -35,3 +35,9 @@ class ThreadTools():
             
 
         return render_template('threads/add.html', form=form, spotify_item=json_spotify_item, item_type=f"{item_type}s")
+    
+
+    @classmethod
+    def show_thread(cls, request, spotify_id, user_id):
+
+        return None
