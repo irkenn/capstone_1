@@ -2,7 +2,12 @@ from flask import Flask, render_template, request, flash, g
 from forms import SearchSpotifyForm
 from SpotifyAPI import SpotifyAPI
 
+
+
+
         
+
+
 class SearchTools():
     """Aids app.py in the search of items with Spotify's API. Integrates with SpotifyAPI.py class, managing the 
      interaction between those API methods and Flask. """
@@ -33,6 +38,15 @@ class SearchTools():
         """Retrieves values from the session """
 
         form = SearchSpotifyForm()
+
+        # print('####################################################')
+        # from jinja2 import Environment
+        # env = Environment()
+        # print(env)
+        # import pdb
+        # pdb.set_trace()
+        # print('####################################################')
+
         if request.method == 'POST' and form.validate_on_submit():
             keywords = form.keywords.data
             form_item_type = form.item_type.data

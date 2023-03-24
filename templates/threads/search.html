@@ -42,13 +42,23 @@
               <div class="card-body text-white">
                 <div class="row">
                   <div class="col-4">
-                    {% if item.images %}
-                      <img src=" {{ item.images[1].url }}" alt="image of the {{item_type}}" class="card-image d-none d-md-inline">
-                    {% elif item.album.images %}
-                      <img src=" {{ item.album.images[1].url }}" alt="image of the {{item_type}}" class="card-image d-none d-md-inline">
-                    {% else %}
-                      <img src="/static/images/default-pic.png" alt="image of the artist" class="card-image d-none d-md-inline">
+                    {% if item_type == "artist" or item_type == "album"%}
+                      {% if item.images %}
+                        <img src="{{ item.images[1].url }}" alt="image of the {{item_type}}" class="card-image d-none d-md-inline">
+                      {% else %}
+                        <img src="/static/images/default-pic.png" alt="image of the artist" class="card-image d-none d-md-inline">
+                      {% endif %} 
+                    
+                    {% elif item_type == "track" %}
+                      {% if item.album.images %}
+                        <img src=" {{ item.album.images[1].url }}" alt="image of the artist" class="card-image">
+                      {% else %}
+                        <img src="/static/images/default-pic.png" alt="image of the artist" class="card-image">
+                      {% endif %}
                     {% endif %}
+                    
+                  
+                      
                   </div>
                   <div class="col-6">
                     <h3 class="card-title">{{item.name}}</h3>
@@ -69,10 +79,10 @@
                   </div>
                   <div class="col-2">
                     <form action="/threads/{{item.id}}/add" >
-                      <input type="hidden" name="item_type" value="album">
+                      <input type="hidden" name="item_type" value="{{item_type}}">
                       <button class="btn btn-primary btn-sm">Add thread</button>
                     </form>
-                    <a class="text-info" href="{{ item.external_urls.spotify }}" target="_blank"> check item on Spotify <i class="fab fa-spotify text-white"></i> </a>
+                    <a class="text-info text-center" href="{{ item.external_urls.spotify }}" target="_blank"> <i class="fab fa-spotify fa-lg text-white"></i> check item on Spotify </a>
                   </div>  
                 </div>    
               </div>          

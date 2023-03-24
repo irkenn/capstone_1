@@ -2,77 +2,134 @@
 
 {% block content %}
 
-<h1>Check out this thread!</h1>
+<div class="container ">
+  <div class="py-4 text-white text-center">
+    <!-- i need more padding in here, a jumbotron is too big -->
+    <h1 class="h-1">Threads about {{ item.name }}</h1>
+  </div>
+</div>
 
 
+<div class="container">
+  <div class="py-3">
+    <div class="card">
+      <div class="card-header text-white">
+        {{item_type}}
+      </div>
+      <div class="card-body text-white">
+        <div class="row">
+            <div class="col-4">
+                {% if item_type == "artists" or item_type == "albums"%}
+                  {% if item.images %}
+                    <img src="{{ item.images[1].url }}" alt="image of the {{item_type}}" class="card-image d-none d-md-inline">
+                  {% else %}
+                    <img src="/static/images/default-pic.png" alt="image of the artist" class="card-image d-none d-md-inline">
+                  {% endif %} 
+                {% elif item_type == "tracks" %}
+                  {% if item.album.images %}
+                    <img src=" {{ item.album.images[1].url }}" alt="image of the artist" class="card-image">
+                  {% else %}
+                    <img src="/static/images/default-pic.png" alt="image of the artist" class="card-image">
+                  {% endif %}
+                {% endif %}
+            
+            </div>
+          <div class="col-6">
+            <h3 class="card-title">{{item.name}}</h3>
+            {% set artist_list = [] %}
+            {% for artist in item.artists %}
+              {% set _ = artist_list.append(artist.name) %}
+            {% endfor %}
+            <p> {{ artist_list|join(", ") }} </p>
+            {% if item_type == "albums" %}
+                <p>{{ item['release_date'][0:4]}}</p>
+                <p> Tracks: {{ item['total_tracks'] }}</p>
+            {% elif item_type == "artists" %}
+              <p>{{ '{:,}'.format(item.followers.total) }} following</p>
+            {% elif item_type == "tracks" %}    
+              <p> {{ item.album.release_date[0:4]}}</p>  
+              <p id="album">album: {{ item.album.name }}</p>
+            {% endif %}
+          </div>
+          <div class="col-2">
+            <a class="text-info" href="{{ item.external_urls.spotify }}" target="_blank"> check item on Spotify <i class="fab fa-spotify text-white"></i> </a>
+          </div>  
+        </div>    
+      </div>          
+    </div>
+  </div>
 
-{% if item_type == "albums" %}
-<div class="col-lg-4 col-md-6 col-12">
-    <div class="card user-card">
-      <div class="card-inner">
-        <div class="card-contents">
-          {% if spotify_item.images %}
-            <img src=" {{ spotify_item.images[1].url }}" alt="image of the artist" class="card-image">
-          {% else %}
-            <img src="/static/images/default-pic.png" alt="image of the artist" class="card-image">
-          {% endif %}
-          <p>{{ spotify_item.name }}</p>
-          {% set artist_list = [] %}
-          {% for artist in spotify_item.artists %}
-          {% set _ = artist_list.append(artist.name) %}
-          {% endfor %}
-          <p> {{ artist_list|join(", ") }} </p>
-          <p>{{ spotify_item['release_date'][0:4]}}</p>
-          <p> Tracks: {{ spotify_item['total_tracks'] }}</p>
-          <a href="{{ spotify_item.external_urls.spotify }}" target="_blank">check album on Spotify!</a>
+  <div class="card text-white">
+    <div class="card-header">
+      <div class="row">
+        <div class="col-6">
+
+          <!-- picture here -->
+          <a class="text-decoration-none text-reset header-info-text" href="/users/{{ thread_item.user.id }}" > 
+            <img class="rounded-circle" id="profile-pic" src="{{ thread_item.user.image_url }}" alt="{{ thread_item.user.username}}">
+            <b>{{thread_item.user.username}}</b>
+          </a>
+          <small>posted:</small>
+        </div>
+        <div class="col-6 text-right">
+          <small class="muted"> <i>{{ thread_item.timestamp.strftime('%d/%m/%Y') }} </i></small>
         </div>
       </div>
     </div>
-  </div>
-  
-  {% elif item_type == "tracks" %}    
-  <div class="col-lg-4 col-md-6 col-12">
-    <div class="card user-card">
-      <div class="card-inner">
-        <div class="card-contents">
-          <p id="track-name">{{ spotify_item.name }}</p>
-          {% set artist_list = [] %}
-          {% for artist in spotify_item.artists %}
-          {% set _ = artist_list.append(artist.name) %}
-          {% endfor %}
-          <p> {{ artist_list|join(", ") }} </p>
-          <p id="album"> {{ spotify_item.album.name }}</p>
-          
-          {% if spotify_item.album.images %}
-            <img src=" {{ spotify_item.album.images[1].url }}" alt="image of the artist" class="card-image">
-          {% else %}
-            <img src="/static/images/default-pic.png" alt="missing image of the artist" class="card-image">
-          {% endif %}
-          <p> {{ spotify_item.album.release_date[0:4]}}</p>
-          <a href="{{ spotify_item.external_urls.spotify }}" target="_blank">check track on Spotify!</a>
+    <div class="card-body row">
+        <div class="col-6">
+          <h4 class="card-title text-center">{{ thread_item.title }}</h4>
+          <p class="text-center">{{ thread_item.description }}</p>
+        </div>
+        <div class="col-6">
+            <button class="btn btn-primary btn-sm pull-right"> <i class="fa-comment-plus-square"></i>Add a comment</button>
+        </div>
+    
       </div>
-    </div>
   </div>
-</div>
+  {% if thread_item.comments%}
 
-{% elif item_type == "artists" %}
-<div class="col-lg-4 col-md-6 col-12">
-  <div class="card user-card">
-    <div class="card-inner">
-      <div class="card-contents">
-        <p id="artist-name">{{ spotify_item.name }}</p>
-        {% if spotify_item.images %}
-          <img src=" {{ spotify_item.images[1].url }}" alt="image of the artist" class="card-image">
-        {% else %}
-          <img src="/static/images/default-pic.png" alt="image of the artist" class="card-image">
-        {% endif %}
-        <p>{{ '{:,}'.format(spotify_item['followers']['total']) }} following</p>
-        <a href="{{ spotify_item.external_urls.spotify }}" target="_blank">check artist on Spotify!</a>
+    {% for comment in thread_item.comments%}
+    
+
+    <div class="card text-white">
+      <div class="card-header">
+        <div class="row">
+          <div class="col-6">
+            <p>by <b>{{comment.user.image_url}}</b></p>
+            <p>by <b>{{comment.user.username}}</b></p>
+          </div>
+          <div class="col-6 text-right">
+            <p> <b>{{ thread_item.timestamp.strftime('%d/%m/%Y') }}</b></p>
+          </div>
+        </div>       
+      </div>
+      
+      <!-- i need to check the code starting from here
+      1) How can I add a comment to the page? is it going to be a form   -->
+      <div class="card-body row">
+        <div class="col-2">
+          <button> Add a comment </button>
+        </div>
+      </div>
+      
+      {% endfor %}
+    
+    {% elif not thread_item.comments %}
+      <div class="card text-white comment-card">
+        <small class="text-white text-center text-muted my-auto "> - - No comments on this thread - -</small>
+      </div>
+    
     </div>
-  </div>
+
+
+  {% endif %}
+
+<!-- let's add a "No comments yet" if there are no comments in the thread -->
+
+<!-- they should be in the same jumbotron -->
+
 </div>
-</div>
-{% endif %}
 
 
 

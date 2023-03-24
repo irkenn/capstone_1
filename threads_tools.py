@@ -28,16 +28,17 @@ class ThreadTools():
             
             thread_item = DatabaseCommentsTools.cache_thread(form, spotify_id, user_id)
             
-
-            return render_template('threads/detail.html', spotify_item=json_spotify_item, item_type=f"{item_type}s", thread_item=thread_item)
+            
+            return render_template('threads/detail.html', item=json_spotify_item, item_type=f"{item_type}s", thread_item=thread_item)
             #while querying is better to use filter_by and .first() than get, in order to avoid an error. Not really, you can use get_or_404()
-            
-            
+        
 
-        return render_template('threads/add.html', form=form, spotify_item=json_spotify_item, item_type=f"{item_type}s")
+        return render_template('threads/add.html', form=form, item=json_spotify_item, item_type=f"{item_type}s")
     
 
     @classmethod
     def show_thread(cls, request, spotify_id, user_id):
 
-        return None
+        # let's add the comments form in case we want to add a comment to the thread
+
+        return render_template('threads/add.html', form=form, item=json_spotify_item, item_type=f"{item_type}s")

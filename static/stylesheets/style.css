@@ -59,15 +59,24 @@ hr{
 
 div.card-header{
     background-color: #404040e3;
+    height: 50px;
 }
+
+/* a.header-info-text{
+    font-size: .80rem;
+} */
 
 div.card{
     background-color: #1f1f1fe3;
 }
 
 
-
 img.card-image{
     height: 150px;
     width: 150px;
+}
+
+/* check if this still does apply */
+div.comment-card{
+    background-color: #343333e3;
 }
