@@ -152,11 +152,23 @@ t2 = Thread(user_id=2,
 t3 = Thread(user_id=1,
             spotify_content_id = '4Z8W4fKeB5YxbusRsdQVPb', 
             title="Third thread about the same content", 
-            description= "Another description")
+            description= "Another description Another description Another description Another description Another description Another description Another description Another description Another description Another description Another description Another description")
+
+t4 = Thread(user_id=1,
+            spotify_content_id = '4LH4d3cOWNNsVw41Gqt2kv', 
+            title="Single thread about some content", 
+            description= "This is about the Dark Side of The Moon")
+
+t5 = Thread(user_id=2,
+            spotify_content_id = '4LH4d3cOWNNsVw41Gqt2kv', 
+            title="Checking why does this happens", 
+            description= "This is about the Dark Side of The Moon")
 
 db.session.add_all([t1,
                     t2,
-                    t3])
+                    t3,
+                    t4,
+                    t5])
 
 db.session.commit()
 

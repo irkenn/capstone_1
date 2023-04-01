@@ -3,11 +3,6 @@ from forms import SearchSpotifyForm
 from SpotifyAPI import SpotifyAPI
 
 
-
-
-        
-
-
 class SearchTools():
     """Aids app.py in the search of items with Spotify's API. Integrates with SpotifyAPI.py class, managing the 
      interaction between those API methods and Flask. """

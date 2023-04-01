@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, render_template, request, flash, redirect, session, g, jsonify
+from flask import Flask, render_template, request, flash, redirect, session, g, jsonify, Response
 from flask_debugtoolbar import DebugToolbarExtension
 from secrets_1 import API_CLIENT_ID, API_SECRET
 from models import db, SpotifyContent, connect_db, User, SpotifyContent, Artist, ArtistTrack, ArtistAlbum, Track, Album, Thread, Comment
@@ -9,7 +9,7 @@ from app_tools import AppTools
 from user_tools import UserTools
 from threads_tools import ThreadTools
 from search_tools import SearchTools
-
+from comment_tools import CommentTools
 
 
 app = Flask(__name__)
@@ -175,6 +175,26 @@ def show_thread_details(spotify_id):
         return redirect('/login')
 
     return ThreadTools.show_thread(request, spotify_id, session["SPOTIFY_COMMENTS_USER_KEY"])   
+
+
+@app.route('/comments/', methods=['POST'])
+def receive_comment():
+    """This endpoint incorporates the previously made comment into the database"""
+
+    if not g.user:
+        return redirect('/login')
+    
+    
+    # data = {"data":"yes"}
+    # return jsonify(data), 201
+    return CommentTools.new_comment(request, g.user.id)
+    
+
+
+
+
+
+
 #This is an example of how maybe it could work
 # @app.route('/threads/new', methods=['GET', 'POST'])
 # def new_thread():

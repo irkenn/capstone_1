@@ -70,6 +70,7 @@ class Artist(db.Model):
     
     followers = db.Column(db.Integer)
 
+
     def __repr__(self):
         return f"<Artist Spotify_id: {self.spotify_id} name: {self.name}>"
 
@@ -146,6 +147,7 @@ class Album(db.Model):
                     secondaryjoin= Artist.spotify_id == ArtistAlbum.artist_id)
     
     tracks = db.relationship('Track', back_populates='album')
+
 
     def __repr__(self):
         return f"<Album spofity_id: {self.spotify_id} name: {self.name} release date: {self.release_date}>"
@@ -265,7 +267,16 @@ class Comment(db.Model):
 
     user = db.relationship('User', back_populates='comments')
 
-    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'thread_id': self.thread_id,
+            'content': self.content,
+            'timestamp': self.timestamp,
+            'user_username': self.user.username,
+            'user_image_url': self.user.image_url
+            }
 
 
 class SubComment(db.Model):

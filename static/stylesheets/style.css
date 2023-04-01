@@ -1,5 +1,5 @@
 body{
-  height: 100vh;
+  min-height: 100vh;
   background: rgb(2,0,36);
   background: linear-gradient(122deg, rgba(2,0,36,1) 51%, rgba(81,9,121,1) 84%, rgba(0,212,255,1) 100%);
   background-size: cover;
@@ -54,11 +54,11 @@ hr{
   }
 
 .jumbotron{
-    background-color: #1f1f1fe3;
+    background-color: #050505dc;
 }
 
-div.card-header{
-    background-color: #404040e3;
+div.general-header{
+    background-color: #e707e064;
     height: 50px;
 }
 
@@ -67,7 +67,7 @@ div.card-header{
 } */
 
 div.card{
-    background-color: #1f1f1fe3;
+    background-color: #121212c9;
 }
 
 
@@ -77,6 +77,26 @@ img.card-image{
 }
 
 /* check if this still does apply */
-div.comment-card{
-    background-color: #343333e3;
+div.thread-comment{
+    background-color: #323131cd; 
+}
+
+div.thread-header{
+    background-color: #cc00ff25; 
+}
+
+div.comment-header{
+    background-color: #ea00ff09; 
+}
+
+.text-subtle{
+    color: rgba(255, 255, 255, 0.532);
+}
+
+.comment-input::placeholder{    
+    color: rgba(255, 255, 255, 0.845);
+}
+
+.comment-input:focus{
+    color: rgba(255, 255, 255, 0.845);
 }
