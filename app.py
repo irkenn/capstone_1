@@ -55,6 +55,7 @@ def homepage():
     if not g.user:
         return render_template('home-logout.html')
     
+    
     return redirect(f'/users/{g.user.id}')
     
 ##############################################################################
@@ -98,12 +99,12 @@ def userpage(user_id):
     
     if not g.user:
         return redirect('/login')
-
+    
     elif g.user.id == user_id:
         return UserTools.user_homepage_data(user_id)
-    
 
-    return AppTools.already_login(g.user)
+    return UserTools.other_user_homepage(user_id)
+    
 
 
 @app.route('/users/<int:user_id>/edit', methods=['GET', 'POST'])
@@ -136,10 +137,16 @@ def delete_userpage(user_id):
 ##############################################################################
 #Search pages
 
-@app.route('/search/<item_name>', methods=['GET', 'POST'])
-def search_items(item_name):
-    """This will query """
+@app.route('/nav-search', methods=['POST'])
+def nav_search_items():
+    """This will receive only POST methods that come from the nav-bar searchbox
+    it will search in the database for the Spotify Content that matches the criteria
+    that matched the search keywords. """
 
+    if not g.user:
+        return redirect('/login')    
+    
+    return SearchTools.search_thread(request.form["keyword"])
 
 
 @app.route('/search/API', methods=['GET', 'POST'])
@@ -150,6 +157,14 @@ def search_items_in_API():
     
     return SearchTools.search_spotify_API(request)
 
+
+@app.route('/search', methods=['GET', 'POST'])
+def form_search_items():
+    """ """
+    if not g.user:
+            return redirect('/login')  
+    
+    return SearchTools.form_search_thread(request)
 
 ##############################################################################
 #Threads pages
@@ -177,18 +192,29 @@ def show_thread_details(spotify_id):
     return ThreadTools.show_thread(request, spotify_id, session["SPOTIFY_COMMENTS_USER_KEY"])   
 
 
+@app.route('/user-thread/<thread_id>/', methods=['GET', 'POST'])
+def show_user_thread(thread_id):
+    """This will show a page with a single thread """
+    
+    if not g.user:
+        return redirect('/login')
+
+    return ThreadTools.user_thread(thread_id)
+
+##############################################################################
+#Threads pages
+
 @app.route('/comments/', methods=['POST'])
 def receive_comment():
-    """This endpoint incorporates the previously made comment into the database"""
+    """This won't render a page, will just receive comment posts
+    and incorporate them into the database"""
 
     if not g.user:
         return redirect('/login')
     
-    
-    # data = {"data":"yes"}
-    # return jsonify(data), 201
     return CommentTools.new_comment(request, g.user.id)
     
+
 
 
 

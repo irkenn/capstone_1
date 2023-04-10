@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, flash, g
-from forms import SearchSpotifyForm
+from forms import SearchSpotifyForm, SearchDatabaseForm
 from SpotifyAPI import SpotifyAPI
+from models import Artist, Album, Track, Thread
 
 
 class SearchTools():
@@ -30,24 +31,16 @@ class SearchTools():
 
     @classmethod
     def search_spotify_API(cls, request):
-        """Retrieves values from the session """
+        """Retrieves values from the form and searches them on Spotify's API """
 
         form = SearchSpotifyForm()
-
-        # print('####################################################')
-        # from jinja2 import Environment
-        # env = Environment()
-        # print(env)
-        # import pdb
-        # pdb.set_trace()
-        # print('####################################################')
 
         if request.method == 'POST' and form.validate_on_submit():
             keywords = form.keywords.data
             form_item_type = form.item_type.data
             limit = form.limit.data or 5
 
-            offset = 1 #This does not appear in the form, it's added later for pagination
+            # offset = 1 #This does not appear in the form, it's added later for pagination
             
             response = SpotifyAPI.search_item(query_string=keywords, 
                                                item_type= form_item_type, 
@@ -57,3 +50,59 @@ class SearchTools():
             return render_template('threads/search.html', form=form, response=json_response, item_type=form_item_type)
   
         return render_template('threads/search.html', form=form)
+
+
+    @classmethod
+    def database_search(cls, keyword):
+        """ Searches for the keyword in the different tables. Returns all the threads 
+        that matched the criteria. This functionality is shared between search_thread 
+        and form_search_thread. """
+
+        artists_query = Artist.query.filter(Artist.name.ilike(f'%{keyword}%'))
+        albums_query = Album.query.filter(Album.name.ilike(f'%{keyword}%'))
+        tracks_query = Track.query.filter(Track.name.ilike(f'%{keyword}%'))
+        
+        """"Makes a list of only the spotify_id's of those items that matched the keyword. """
+
+        artist_ids = [item.spotify_id for item in artists_query]
+        albums_ids = [item.spotify_id for item in albums_query]
+        tracks_ids = [item.spotify_id for item in tracks_query]
+
+        """Combines the lists into a single one. """
+
+        unified_list = artist_ids + albums_ids + tracks_ids
+
+        """Queries all the threads that include the spotify_id and orders them by timestamp"""
+        threads_query = Thread.query.filter(Thread.spotify_content_id.in_(unified_list)).order_by(Thread.timestamp.desc()).all()
+
+        return threads_query
+
+
+
+    @classmethod
+    def search_thread(cls, keyword):
+        """ Searches for the keyword in the different tables. """
+
+        threads_query = cls.database_search(keyword)
+
+        return render_template('threads/search-results.html', threads_query=threads_query, keyword=keyword)
+    
+
+    @classmethod
+    def form_search_thread(cls, request):
+        """Sends a form in case of a GET, request queries and works with the """
+
+        form = SearchDatabaseForm()
+
+        if request.method == 'POST' and form.validate_on_submit():
+            keyword = form.keyword.data
+
+            threads_query =  cls.database_search(keyword)
+            
+            return render_template('threads/search-form.html', threads_query=threads_query, form=form, keyword=keyword)
+
+        return render_template('threads/search-form.html', form=form)
+        
+        
+
+        

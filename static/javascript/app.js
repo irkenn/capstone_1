@@ -68,6 +68,7 @@ threadContainer.forEach(function(button){
             
             if (input.value){
                 
+
                 let greatGrandParentDiv = parentDiv.parentElement;
                 let userID =  greatGrandParentDiv.getAttribute("user_id");
                 let threadID = greatGrandParentDiv.getAttribute("thread_id");
@@ -82,11 +83,18 @@ threadContainer.forEach(function(button){
                 commentSection.append(newDiv);
                 
                 input.value = '';
-            }
-        }
+            };
+        };
     
     });       
+
+
 });
+
+
+
+
+
 
 // I will repeat the function in order to also incorporate the "return" in the input field
 // I could have done it in a more synthetical way, but I don't have time

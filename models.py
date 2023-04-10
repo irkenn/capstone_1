@@ -46,8 +46,16 @@ class SpotifyContent(db.Model):
                           nullable=False, 
                           default=datetime.utcnow())
     
+    artist = db.relationship('Artist', backref='spotify_content', uselist=False)
+
+    album = db.relationship('Album', backref='spotify_content', uselist=False)
+    
+    track = db.relationship('Track', backref='spotify_content', uselist=False)
+    
+
+    
     def __repr__(self):
-        return f"<SpotifyContent id: {self.id} content_type: {self.content_type} timestamp: {self.timestamp}>"
+        return f"<SpotifyContent id: {self.id} content_type: {self.content_type.name} timestamp: {self.timestamp}>"
 
     @property
     def content_type_name(self):
@@ -59,8 +67,10 @@ class Artist(db.Model):
 
     __tablename__ = 'artists'
 
-    spotify_id = db.Column(db.Text,
-                           primary_key=True)
+    spotify_id = db.Column(db.Text, 
+                           db.ForeignKey(SpotifyContent.id, 
+                                         ondelete='cascade'), 
+                                         primary_key=True)
     
     name = db.Column(db.Text)
     
@@ -128,7 +138,7 @@ class Album(db.Model):
 
     __tablename__ = 'albums'
     
-    spotify_id = db.Column(db.Text, primary_key=True)
+    spotify_id = db.Column(db.Text, db.ForeignKey(SpotifyContent.id, ondelete='cascade'), primary_key=True)
 
     name = db.Column(db.Text)
     
@@ -173,7 +183,7 @@ class Track(db.Model):
 
     __tablename__ = 'tracks'
     
-    spotify_id = db.Column(db.Text, primary_key=True)
+    spotify_id = db.Column(db.Text, db.ForeignKey(SpotifyContent.id, ondelete='cascade'), primary_key=True)
     
     name = db.Column(db.Text)
     
@@ -228,17 +238,25 @@ class Thread(db.Model):
     spotify_content_id = db.Column(db.Text, 
                                    db.ForeignKey('spotify_content.id', ondelete='cascade'))
 
-    title = db.Column(db.Text, nullable=False)
+    title = db.Column(db.Text, 
+                      nullable=False)
 
     description = db.Column(db.Text)
 
-    timestamp = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
+    timestamp = db.Column(db.DateTime, 
+                          nullable=False, 
+                          default=datetime.utcnow())
     
-    user = db.relationship("User", back_populates='threads')
+    user = db.relationship("User", 
+                           back_populates='threads')
 
-    comments = db.relationship("Comment", backref="threads")
+    comments = db.relationship("Comment", 
+                               backref="threads")
     
-    thread_votes = db.relationship("ThreadVote", backref="thread")
+    spotify_content = db.relationship("SpotifyContent", 
+                                      backref="threads", 
+                                      uselist=False)
+    
     
     
 class Comment(db.Model):
@@ -279,54 +297,7 @@ class Comment(db.Model):
             }
 
 
-class SubComment(db.Model):
-    """This are comments that bind to another comment"""
 
-    __tablename__ = "subcomments"
-
-    def __repr__(self):
-        return f"<Subcomment id: {self.id} content : {self.content} >"
-    
-    id = db.Column(db.Integer, 
-                   primary_key=True, 
-                   autoincrement=True)
-
-    user_id = db.Column(db.Integer, 
-                        db.ForeignKey('users.id', ondelete='cascade'),
-                        nullable=False)
-
-    comment_id = db.Column(db.Integer, 
-                          db.ForeignKey('comments.id', ondelete='cascade'),
-                          nullable=False)
-
-    content = db.Column(db.Text)
-
-    timestamp = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
-
-    user = db.relationship('User', back_populates='subcomments')
-
-
-
-class ThreadVote(db.Model):
-    """This will count the votes per Thread a user can only vote once. """ 
-    
-    __tablename__ = 'threads_votes'
-
-    def __repr__(self):
-        return f"<ThreadVote user_id: {self.user_id} thread_id: {self.thread_id} vote{self.vote}>"
-    
-    
-    user_id = db.Column(db.Integer, 
-                        db.ForeignKey('users.id', ondelete='cascade'), 
-                        primary_key=True)
-    
-    thread_id = db.Column(db.Integer, 
-                            db.ForeignKey('threads.id', ondelete='cascade'), 
-                            primary_key=True)
-    
-    vote = db.Column(db.Integer, 
-                     info={'choices': [(1, '+1'), (-1, '-1')]}, 
-                     nullable=False)
 
 ################################################################################
 ########## MODELS RELATED TO WEBSITE'S DATABASE USER-THREADS-COMMENTS ##########
@@ -350,8 +321,6 @@ class User(db.Model):
     image_url = db.Column(db.Text, default="/static/images/default-pic.png")
 
     comments = db.relationship("Comment", back_populates="user")
-
-    subcomments = db.relationship("SubComment", back_populates="user")
 
     threads = db.relationship("Thread", back_populates="user")
     

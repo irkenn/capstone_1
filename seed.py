@@ -1,5 +1,5 @@
 from app import app
-from models import db, User, SpotifyContent, Artist, ArtistTrack, ArtistAlbum, Track, Album, Thread, Comment, ThreadVote, SubComment
+from models import db, User, SpotifyContent, Artist, ArtistTrack, ArtistAlbum, Track, Album, Thread, Comment
 
 
 db.drop_all()
@@ -23,7 +23,7 @@ u1 = User(username="Hannah",
 u2 = User(username="Mark", 
           email='mark@aol.com', 
           password='Welcome123', 
-          image_url='https://research-information.bris.ac.uk/ws/files/289901366/Hannah_Bloomfield_headshot_min.jpg')
+          image_url='https://upload.wikimedia.org/wikipedia/commons/1/1f/Dwayne_Johnson_2014_%28cropped%29.jpg')
 
 
 db.session.add_all([u1, u2])
@@ -183,41 +183,7 @@ c2 = Comment(user_id=2,
              content = "This is a second comment on thread No.1")
 
 
-v1 = ThreadVote(user_id=1,
-                thread_id=1,
-                vote=1)
-
-v2 = ThreadVote(user_id=2,
-                thread_id=1,
-                vote=1)
-
-v3 = ThreadVote(user_id=1,
-                thread_id=2,
-                vote=-1)
-
-v4 = ThreadVote(user_id=2,
-                thread_id=2,
-                vote=-1)
-
 db.session.add_all([c1, 
-                    c2,
-                    v1,
-                    v2,
-                    v3,
-                    v4
+                    c2
                     ])
-db.session.commit()
-
-
-sc1 = SubComment(user_id=1, 
-             comment_id=1, 
-             content = "This is a comment by user 1 on comment 1 on thread No.1")
-
-sc2 = SubComment(user_id=2, 
-                comment_id=1, 
-                content = "This is a comment by user 2 on comment 1 on thread No.1")
-
-db.session.add_all([sc1, 
-                    sc2])
-
 db.session.commit()

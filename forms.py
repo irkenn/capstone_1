@@ -32,12 +32,7 @@ class UserDeleteForm(FlaskForm):
     password = PasswordField('Type your password', validators=[DataRequired(), Length(min=6)])
 
 
-class SearchSpotifyForm(FlaskForm):
-    """Form to search through Spotify's API"""
 
-    item_type = SelectField('What kind of item are you looking for...', choices=[('album', 'Album'),('artist', 'Artist'), ('track', 'Track'), ('genre', 'Genre')], validators=[DataRequired()])
-    keywords = StringField("Type here your keyword", validators=[DataRequired()])
-    limit = IntegerField("Choose the amount of results", default=5, validators=[Optional(), NumberRange(min=1, max=50, message='The max number should not exeed 50') ])
 
 class AddThreadForm(FlaskForm):
     """Form to start a thread """
@@ -45,3 +40,14 @@ class AddThreadForm(FlaskForm):
     title = StringField('Write your title here', validators=[DataRequired(), Length(max=130, message='Write your title in less than 130 characters')])
     description = TextField('Use this place to explain more if you need', validators=[Optional(), Length(max=500, message='Write your description in less than 500 characters')])
 
+class SearchDatabaseForm(FlaskForm):
+    """Form to search keywords in the database. """
+
+    keyword = StringField("Type here what you're looking for", validators=[DataRequired(), Length(max=25, message='your keyword search has to be less than 25 characters')])
+    
+class SearchSpotifyForm(FlaskForm):
+    """Form to search through Spotify's API"""
+
+    item_type = SelectField('What kind of item are you looking for...', choices=[('album', 'Album'),('artist', 'Artist'), ('track', 'Track'), ('genre', 'Genre')], validators=[DataRequired()])
+    keywords = StringField("Type here your keyword", validators=[DataRequired()])
+    limit = IntegerField("Choose the amount of results", default=5, validators=[Optional(), NumberRange(min=1, max=50, message='The max number should not exeed 50') ])

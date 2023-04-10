@@ -12,7 +12,7 @@
                         <img class="d-none d-md-inline rounded-circle user-pic"  src="{{ user.image_url }}" alt="{{ user.username}}">
                     </div>
                     <div class="col-md-4 col-12">
-                        <h2 class="text-h3"> Welcome back {{user.username}}!</h2> 
+                        <h2 class="text-h3">{{user.username}}</h2> 
                     </div>
                 </div>
                 <hr>
@@ -24,8 +24,8 @@
 
 <div class="container 2 md-container-fluid">
     <div class="jumbotron text-center text-white py-4">
-        <h4 class="text-subtle">Check out the latest in Threads in Spotify Comments Web App</h4>
-    {% for thread_item in latest_threads %}
+        <h4 class="text-subtle">Check out {{user.username}}'s activity on Spotify Comments Web App</h4>
+    {% for thread_item in user.threads %}
 
       <div class="thread-container">
     

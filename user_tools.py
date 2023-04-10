@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, flash, redirect, session, g
 from forms import UserAddForm, UserEditForm, UserDeleteForm
-from models import db, connect_db, User
+from models import db, connect_db, User, Thread
 from sqlalchemy.exc import IntegrityError
 
 
@@ -32,27 +32,28 @@ class UserTools():
 
     @classmethod
     def user_homepage_data(cls, url_user_id):
+        """This is the user's personal page. It shows the latest threads (5 in total) from the database un a newsfeed section
+         and also shows the user's activity in the page, such as threads or comments made by the user. """    
         
+        latest_threads = Thread.query.order_by(Thread.timestamp.desc()).slice(0,5).all()
 
-        if g.user.id == url_user_id:
-            current_user = User.query.get_or_404(url_user_id)
-            # print('request.args.get("q")', request.args.get('q')) # there's a search field in the page this will retrieve those arguments
-                #logic to be applied to render the homepage info (too soon to deal with this right now)
-                
-                # ids = [u.id for u in current_user.following]
-                # ids.append(g.user.id)
-                # messages = (db.session.query(Message)
-                #             .filter(Message.user_id.in_(ids))
-                #             .order_by(Message.timestamp.desc())
-                #             .limit(100)
-                #             .all())
-                # likes = (db.session.query(Likes.message_id)
-                #         .filter(Likes.user_id == g.user.id)
-                #         .all())
-                # likes = [i[0] for i in likes] ## to eliminate the comma of each tuple
-            return render_template('users/user.html', user=current_user)
-        return redirect('/login')
+        """Once the user is queried it will also contain all the threads and comments that the user has posted"""
+        current_user = User.query.get_or_404(url_user_id)
+
+
+        return render_template('users/user.html', user=current_user, latest_threads=latest_threads)
     
+    
+    @classmethod
+    def other_user_homepage(cls, user_id):
+        """This is the page where you can check the details about other users in the platform
+        it will show all the user's activity. The difference between user's homepage is that this
+        page doesn't include a newsfeed. """
+
+        current_user = User.query.get_or_404(user_id)
+        if current_user:
+            return render_template('users/other-user.html', user=current_user)
+
 
     @classmethod
     def edit_user_handler(cls, request, user_id):
@@ -74,14 +75,17 @@ class UserTools():
                     db.session.add(user)
                     db.session.commit()
                 except IntegrityError:
+                    
                     """Exception when the new username is already taken"""
                     db.session.rollback()
                     flash("New username or email is already taken", 'danger')
                     return render_template('users/edit.html', form=form, user=user)
+                
                 """If the operation is succesful, redirects to userpage"""
                 flash("Saved changes", 'info')
                 return redirect(f'/users/{user.id}')
             elif User.authenticate(user.username, form.password.data) is False:
+                
                 """If the password is not correct it will re send the form to confirm the info"""
                 flash("Please provide the correct password", 'danger')
                 return render_template('users/edit.html', form=form, user=user) #I think this line is redundant

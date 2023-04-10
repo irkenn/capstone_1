@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<div class="container 1 md-container-fluid">
+    <div class="jumbotron md-jumbotron-fluid text-center text-white py-4 mt-3">
+        <h4 class="text-subtle">Current threads for {{keyword}}</h4>
+    </div>
+
+    {% if not threads_query %}
+    <div class="container">
+        <div class="jumbotron text-white ">
+            <div class="row justify-content-md-center">
+                <div class="col-md-7 col-lg-5">
+                    <h2 class="join-message">Currently there are no threads on {{keyword}}</h2>
+                    <hr>
+                    <p>Click here to look for content and start a thread</p>
+                    <a href="/search/API" class="btn btn-primary">Search for content</a>    
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% for thread_item in threads_query %}
+        <div class="thread-container">
+        
+            <div class="card text-white mt-4 thread-card">
+                <div class="card-header general-header thread-header">
+                    <div class="row">
+                    <div class="col-9 text-left">
+                        <a class="text-decoration-none text-reset header-info-text" href="/users/{{ thread_item.user.id }}" > 
+                            <img class="rounded-circle" id="profile-pic" src="{{ thread_item.user.image_url }}" alt="{{ thread_item.user.username}}">
+                            <b>{{thread_item.user.username}}</b>
+                        </a>
+                        <small>started a 
+                            <a class="text-decoration-none text-reset header-info-text" href="/user-thread/{{thread_item.id}}">
+                            <b>thread</b>
+                            </a> on an {{thread_item.spotify_content.content_type_name}} :
+                        </small>
+                    </div>
+                    <div class="col-3 text-right">
+                        <small class="muted text-subtle"> <i>{{ thread_item.spotify_content.timestamp.strftime('%d/%m/%Y') }} </i></small>
+                    </div>
+                    </div>
+                </div>
+            
+                <div class="card-body comment-section">
+
+                <div class="row pb-2 align-items-center">
+                    <!-- There's a conditional to detect the kind of item (artist, album, track) since the data to acces each one of those categories is
+                    different there's a lot of repeated code to fill up correctly those categories and also add <a> to the each of the elements inside the card -->
+                    
+                    {% if thread_item.spotify_content.content_type_name == 'artist'%}
+                        <div class="col-3">
+                            <a href="/threads/{{thread_item.spotify_content_id}}">
+                                <img src="{{ thread_item.spotify_content.artist.preview_url }}" alt="image of the artist" class="card-image-small d-md-inline">
+                            </a>
+                        </div>
+                        <div class="col-6 text-left">
+                            <a class="text-decoration-none text-reset header-info-text" href="/threads/{{thread_item.spotify_content_id}}">
+                                <p class="card-title ">{{ thread_item.spotify_content.artist.name }}</p>
+                            </a>
+                            <small class="text-subtle">{{ '{:,}'.format(thread_item.spotify_content.artist.followers) }} following</small>                        
+                        </div>
+                    {% elif thread_item.spotify_content.content_type_name == 'album'%}
+                        <div class="col-3">
+                            <a href="/threads/{{thread_item.spotify_content_id}}">
+                                <img src="{{ thread_item.spotify_content.album.preview_url }}" alt="image of the album" class="card-image-small d-md-inline">
+                            </a>
+                        </div>
+                        <div class="col-6 text-left">
+                        <a class="text-decoration-none text-reset header-info-text" href="/threads/{{thread_item.spotify_content_id}}">
+                            <p class="mb-1  card-title">{{ thread_item.spotify_content.album.name }} <small class="my-0 text-subtle"> ({{ thread_item.spotify_content.album.release_date}})</small></p>
+                        </a>
+                        {% set artist_list = [] %}
+                        {% for artist in thread_item.spotify_content.album.artists %}
+                            {% set _ = artist_list.append('<a class="text-decoration-none text-reset header-info-text" href="/threads/'~ artist.spotify_id ~'">'~ artist.name ~' </a>') %}
+                        {% endfor %}
+                        <small class="my-0 text-subtle">{{ artist_list|join(", ")|safe }}</small><br>
+                        <small class="my-0 text-subtle">tracks: {{ thread_item.spotify_content.album.total_tracks }}</small>
+                        </div>
+                    {% elif thread_item.spotify_content.content_type_name == 'track'%}
+                        <div class="col-3">
+                        <a href="/threads/{{thread_item.spotify_content_id}}">
+                            <img src="{{ thread_item.spotify_content.track.album.preview_url }}" alt="image of the album" class="card-image-small d-md-inline">    
+                        </a>
+                        </div>
+                        <div class="col-6 text-left">
+                        <a class="text-decoration-none text-reset header-info-text" href="/threads/{{thread_item.spotify_content_id}}">  
+                            <p class="mb-1">{{ thread_item.spotify_content.track.name }} <small class="my-0 text-subtle"> ({{ thread_item.spotify_content.track.album.release_date}})</small></p>
+                        </a>
+                        {% set artist_list = [] %}
+                        {% for artist in thread_item.spotify_content.track.artists %}
+                            {% set _ = artist_list.append('<a class="text-decoration-none text-reset header-info-text" href="/threads/'~ artist.spotify_id ~'">'~ artist.name ~' </a>') %}
+                        {% endfor %}
+                        <small class="my-0 text-subtle">{{ artist_list|join(", ")|safe }}</small><br>
+                        <a class="text-decoration-none text-reset header-info-text" href="/threads/{{thread_item.spotify_content.track.album.spotify_id}}">    
+                            <small class="my-0 text-subtle">album: {{ thread_item.spotify_content.track.album.name }}</small>
+                        </a>
+                        </div>           
+                    {% endif %}              
+                </div>
+                    <hr class="subtle-rule">
+                
+                    <div class="row">
+                        <div class="col-9">
+                            <h4 class="card-title text-left">"{{ thread_item.title }}"</h4>
+                            <p class="text-left">{{ thread_item.description }}</p>
+                        </div>
+                    </div>
+                    <!-- comment button goes here -->
+                    <div class="card-body comment-section">
+                        <!-- comment button goes here -->
+                        <div class="row">
+                            <div class="col-12" thread_id="{{ thread_item.id }}" user_id="{{ g.user.id }}" >
+                                <!-- the id in here is to help it locate faster by the javascript code this is where the bootstrap input group will be included -->
+                                <button class="btn btn-outline-dark btn-sm btn-block comment-button"> <i class="fas fa-comment"></i> Add a comment</button>
+                            </div>
+                        </div>
+                        <!-- this is just to replicate input the form -->
+                    </div>
+                </div>  
+            </div>  
+        
+            <div class="container comment-container" comment_container_thread_id ="{{thread_item.id}}" >
+                {% if thread_item.comments%}
+                
+                    {% for comment in thread_item.comments%}
+                        
+                        <div class="card text-white">
+                            <!-- start of comment header section   -->
+                            <div class="card-body  py-0 ">
+                                <div class="row comment-header">
+                                    <div class="col-10 text-left">
+                                    <a class="text-decoration-none text-reset text-xxs" href="/users/{{ comment.user.id }}" > 
+                                        <small class="text-subtle"><b>{{comment.user.username}}</b> commented:</small>
+                                    </a>
+                                    </div>
+                                    <div class="col-2 text-right ">
+                                        <small class="muted text-subtle text-xxs"> <i>{{ comment.timestamp.strftime('%d/%m/%Y') }} </i></small>
+                                    </div>
+                                
+                                </div> 
+                                <!-- start of comment content section -->
+                                <div class="row ">
+                                    <div class="col-12 comment-body">
+                                        <p class="text-left">{{ comment.content }}</p>
+                                    </div>  
+                                </div>
+                            </div>
+                            
+                        </div>
+
+                    {% endfor %}
+            
+                {% endif %}
+            </div>  
+      
+        </div>
+        <!-- this </div> closes thread-container which groups each thread and comments together-->    
+    {% endfor %}
+   
+    <!-- This is the end of the jumbotron -->
+</div>
+<!-- This is the end of container 1 -->
+
+
+<script src="https://unpkg.com/axios/dist/axios.js"></script>
+<script src="/static/javascript/app.js"></script>
+
+
+{% endblock %}

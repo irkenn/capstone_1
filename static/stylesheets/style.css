@@ -20,6 +20,17 @@ img#profile-pic{
     margin-right: 10px;
 }
 
+
+img.user-pic{
+    height: 120px;
+    width: 120px;
+    object-fit: cover;
+    border: 5px solid rgba(81,9,121,0.6) ;
+    margin-top: -30px;
+    z-index: 1;
+    position: relative;
+}
+
 input#nav-form-placeholder{
     width: 250px;
 }
@@ -36,6 +47,10 @@ input#nav-form-placeholder{
 }
 
 hr{
+    border-color: aliceblue;
+}
+
+hr.subtle-rule{
     border-color: aliceblue;
 }
 
@@ -76,6 +91,11 @@ img.card-image{
     width: 150px;
 }
 
+img.card-image-small{
+    height: 65px;
+    width: 65px;
+}
+
 /* check if this still does apply */
 div.thread-comment{
     background-color: #323131cd; 
@@ -87,6 +107,10 @@ div.thread-header{
 
 div.comment-header{
     background-color: #ea00ff09; 
+}
+
+div.mini-content-container{
+    background-color: #07e2ff1a; 
 }
 
 .text-subtle{

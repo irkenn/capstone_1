@@ -2,105 +2,150 @@
 
 {% block content %}
 
-<div class="container ">
-  <div class="py-4 text-white text-center">
-    <!-- i need more padding in here, a jumbotron is too big -->
-    <h1 class="h-1">This is your thread about {{ item.name }}</h1>
-    <a href="/threads/{{ item.id }}" class="btn btn-outline-info btn-lg btn-block my-3" role="button" aria-pressed="true">Check out more threads about {{ item.name }}</a>
-    </div>
-</div>
 
+<!-- this container has the user info -->
 
-<div class="container">
-  <div class="py-3">
-    <div class="card">
-      <div class="card-header text-white general-header">
-        {{item_type}}
-      </div>
-      <div class="card-body text-white">
-        <div class="row">
-            <div class="col-3">
-                {% if item_type == "artists" or item_type == "albums"%}
-                  {% if item.images %}
-                    <img src="{{ item.images[1].url }}" alt="image of the {{item_type}}" class="card-image d-none d-md-inline">
-                  {% else %}
-                    <img src="/static/images/default-pic.png" alt="image of the artist" class="card-image d-none d-md-inline">
-                  {% endif %} 
-                {% elif item_type == "tracks" %}
-                  {% if item.album.images %}
-                    <img src=" {{ item.album.images[1].url }}" alt="image of the artist" class="card-image">
-                  {% else %}
-                    <img src="/static/images/default-pic.png" alt="image of the artist" class="card-image">
-                  {% endif %}
-                {% endif %}
-            
+<div class="container 1 md-container-fluid">
+    <div class="thread-container">
+        <div class="card text-white mt-4 thread-card">
+            <div class="card-header general-header thread-header">
+            <div class="row">
+              <div class="col-9 text-left">
+                  <a class="text-decoration-none text-reset header-info-text" href="/users/{{ thread_item.user.id }}" > 
+                    <img class="rounded-circle" id="profile-pic" src="{{ thread_item.user.image_url }}" alt="{{ thread_item.user.username}}">
+                    <b> by {{thread_item.user.username}}</b>
+                  </a>
+              </div>
+              <div class="col-3 text-right">
+                <small class="muted text-subtle"> <i>{{ thread_item.spotify_content.timestamp.strftime('%d/%m/%Y') }} </i></small>
+              </div>
             </div>
-          <div class="col-6">
-            <h3 class="card-title">{{item.name}}</h3>
-            {% set artist_list = [] %}
-            {% for artist in item.artists %}
-              {% set _ = artist_list.append(artist.name) %}
-            {% endfor %}
-            <p> {{ artist_list|join(", ") }} </p>
-            {% if item_type == "albums" %}
-                <p>{{ item['release_date'][0:4]}}</p>
-                <p> Tracks: {{ item['total_tracks'] }}</p>
-            {% elif item_type == "artists" %}
-              <p>{{ '{:,}'.format(item.followers.total) }} following</p>
-            {% elif item_type == "tracks" %}    
-              <p> {{ item.album.release_date[0:4]}}</p>  
-              <p id="album">album: {{ item.album.name }}</p>
-            {% endif %}
+            </div>
+    
+          
+            <div class="spotify-content-container">  
+          <div class="row pb-2 align-items-center">
+              <!-- There's a conditional to detect the kind of item (artist, album, track) since the data to acces each one of those categories is
+                different there's a lot of repeated code to fill up correctly those categories and also add <a> to the each of the elements inside the card -->
+            
+              {% if thread_item.spotify_content.content_type_name == 'artist'%}
+                <div class="col-3">
+                    <a href="/threads/{{thread_item.spotify_content_id}}">
+                        <img src="{{ thread_item.spotify_content.artist.preview_url }}" alt="image of the artist" class="card-image-small d-md-inline">
+                    </a>
+                </div>
+                <div class="col-6 text-left">
+                    <a class="text-decoration-none text-reset header-info-text" href="/threads/{{thread_item.spotify_content_id}}">
+                        <p class="card-title ">{{ thread_item.spotify_content.artist.name }}</p>
+                    </a>
+                    <small class="text-subtle">{{ '{:,}'.format(thread_item.spotify_content.artist.followers) }} following</small>                        
+                </div>
+            {% elif thread_item.spotify_content.content_type_name == 'album'%}
+                <div class="col-3">
+                    <a href="/threads/{{thread_item.spotify_content_id}}">
+                        <img src="{{ thread_item.spotify_content.album.preview_url }}" alt="image of the album" class="card-image-small d-md-inline">
+                    </a>
+                </div>
+                <div class="col-6 text-left">
+                  <a class="text-decoration-none text-reset header-info-text" href="/threads/{{thread_item.spotify_content_id}}">
+                    <p class="mb-1  card-title">{{ thread_item.spotify_content.album.name }} <small class="my-0 text-subtle"> ({{ thread_item.spotify_content.album.release_date}})</small></p>
+                  </a>
+                  {% set artist_list = [] %}
+                  {% for artist in thread_item.spotify_content.album.artists %}
+                    {% set _ = artist_list.append('<a class="text-decoration-none text-reset header-info-text" href="/threads/'~ artist.spotify_id ~'">'~ artist.name ~' </a>') %}
+                  {% endfor %}
+                  <small class="my-0 text-subtle">{{ artist_list|join(", ")|safe }}</small><br>
+                  <small class="my-0 text-subtle">tracks: {{ thread_item.spotify_content.album.total_tracks }}</small>
+                </div>
+            {% elif thread_item.spotify_content.content_type_name == 'track'%}
+                <div class="col-3">
+                  <a href="/threads/{{thread_item.spotify_content_id}}">
+                    <img src="{{ thread_item.spotify_content.track.album.preview_url }}" alt="image of the album" class="card-image-small d-md-inline">    
+                  </a>
+                </div>
+                <div class="col-6 text-left">
+                  <a class="text-decoration-none text-reset header-info-text" href="/threads/{{thread_item.spotify_content_id}}">  
+                    <p class="mb-1">{{ thread_item.spotify_content.track.name }} <small class="my-0 text-subtle"> ({{ thread_item.spotify_content.track.album.release_date}})</small></p>
+                  </a>
+                  {% set artist_list = [] %}
+                  {% for artist in thread_item.spotify_content.track.artists %}
+                    {% set _ = artist_list.append('<a class="text-decoration-none text-reset header-info-text" href="/threads/'~ artist.spotify_id ~'">'~ artist.name ~' </a>') %}
+                  {% endfor %}
+                  <small class="my-0 text-subtle">{{ artist_list|join(", ")|safe }}</small><br>
+                  <a class="text-decoration-none text-reset header-info-text" href="/threads/{{thread_item.spotify_content.track.album.spotify_id}}">    
+                    <small class="my-0 text-subtle">album: {{ thread_item.spotify_content.track.album.name }}</small>
+                  </a>
+                </div>           
+            {% endif %}              
           </div>
-          <div class="col-3 d-flex flex-column">
-            <a class="text-info mt-auto" href="{{ item.external_urls.spotify }}" target="_blank"> check item on Spotify <i class="fab fa-spotify text-white"></i> </a>
-          </div>  
-        </div>    
-      </div>          
-    </div>
-  </div>
+            </div>
+            <hr class="subtle-rule">
 
-  <!-- This is where the threads start -->
+            <div class="row">
+                <div class="col-9">
+                    <h4 class="card-title text-left">"{{ thread_item.title }}"</h4>
+                    <p class="text-left">{{ thread_item.description }}</p>
+                </div>
+            </div>
 
-  <div class="card text-white">
-    <div class="card-header general-header">
-      <div class="row">
-        <div class="col-6">
-
-          <!-- picture here -->
-          <a class="text-decoration-none text-reset header-info-text" href="/users/{{ thread_item.user.id }}" > 
-            <img class="rounded-circle" id="profile-pic" src="{{ thread_item.user.image_url }}" alt="{{ thread_item.user.username}}">
-            <b>{{thread_item.user.username}}</b>
-          </a>
-          <small>posted:</small>
-        </div>
-        <div class="col-6 text-right">
-          <small class="muted"> <i>{{ thread_item.timestamp.strftime('%d/%m/%Y') }} </i></small>
-        </div>
-      </div>
-    </div>
-
-    <div class="card-body row comment-section">
-      <div class="col-6">
-        <h4 class="card-title text-center">{{ thread_item.title }}</h4>
-        <p class="text-center">{{ thread_item.description }}</p>
-      </div>
-      <!-- comment button goes here -->
         
-      <div class="col-6">
-        <button class="btn btn-primary btn-sm pull-right comment-button"> <i class="fas fa-comment"></i> Add a comment</button>
-      </div>
-        <!-- this is just to replicate the form in the  -->
+            <div class="card-body comment-section">
+                <!-- comment button goes here -->
+                <div class="row">
+                    <div class="col-12" thread_id="{{ thread_item.id }}" user_id="{{ g.user.id }}" >
+                        <!-- the id in here is to help it locate faster by the javascript code this is where the bootstrap input group will be included -->
+                        <button class="btn btn-outline-dark btn-sm btn-block comment-button"> <i class="fas fa-comment"></i> Add a comment</button>
+                    </div>
+                </div>
+                <!-- this is just to replicate input the form -->
+            </div>
+        </div>  
+    
+        <div class="container comment-container" comment_container_thread_id ="{{thread_item.id}}" >
+            {% if thread_item.comments%}
+              
+              {% for comment in thread_item.comments%}
+                
+                <div class="card text-white">
+                  <!-- start of comment header section   -->
+                  <div class="card-body  py-0 ">
+                    <div class="row comment-header">
+                        <div class="col-10">
+                          <a class="text-decoration-none text-reset text-xxs" href="/users/{{ comment.user.id }}" > 
+                            <small class="text-subtle"><b>{{comment.user.username}}</b> commented:</small>
+                          </a>
+                        </div>
+                        <div class="col-2 text-right ">
+                          <small class="muted text-subtle text-xxs"> <i>{{ comment.timestamp.strftime('%d/%m/%Y') }} </i></small>
+                        </div>
+                      
+                    </div> 
+                    <!-- start of comment content section -->
+                    <div class="row ">
+                      <div class="col-12 comment-body">
+                        <p class="text-left">{{ comment.content }}</p>
+                      </div>  
+                    </div>
+                  </div>
+                  
+                </div>
+                  {% endfor %}
+          
+            {% endif %}
+        </div>  
+    
+        
+
+    
     </div>
-  
-  </div>  
+        <!-- this </div> closes thread-container which groups each thread and comments together-->
 
-<!-- let's add a "No comments yet" if there are no comments in the thread -->
-
-<!-- they should be in the same jumbotron -->
 
 </div>
 
+
+<script src="https://unpkg.com/axios/dist/axios.js"></script>
+<script src="/static/javascript/app.js"></script>
 
 
 {% endblock %}

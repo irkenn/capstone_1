@@ -26,7 +26,7 @@ class SpotifyCacheTools():
         name = json_spotify_artist['name']
         spotify_id = json_spotify_artist['id']
         external_url = json_spotify_artist['external_urls']['spotify']
-        preview_url = json_spotify_artist['images'][1]['url'] if json_spotify_artist['images'] else None #on reserve, might need to add code to prevent a KeyError
+        preview_url = json_spotify_artist['images'][1]['url'] if json_spotify_artist['images'] else "/static/images/default-pic.png" #on reserve, might need to add code to prevent a KeyError
         followers = json_spotify_artist['followers']['total']
         
         cached_item = Artist(spotify_id=spotify_id, 
@@ -67,7 +67,7 @@ class SpotifyCacheTools():
         release_date = json_spotify_album['release_date'][0:4]
         total_tracks = json_spotify_album['total_tracks']
         external_url = json_spotify_album['external_urls']['spotify']
-        preview_url = json_spotify_album['images'][1]['url'] if json_spotify_album['images'] else None #on reserve, might need to add code to prevent a KeyError
+        preview_url = json_spotify_album['images'][1]['url'] if json_spotify_album['images'] else "/static/images/default-pic.png" #on reserve, might need to add code to prevent a KeyError
         
         cached_item = Album(spotify_id= spotify_id,
                             name= name,
