@@ -2,7 +2,7 @@ import os
 
 from flask import Flask, render_template, request, flash, redirect, session, g, jsonify, Response
 from flask_debugtoolbar import DebugToolbarExtension
-# from secrets_1 import API_CLIENT_ID, API_SECRET
+
 from models import db, SpotifyContent, connect_db, User, SpotifyContent, Artist, ArtistTrack, ArtistAlbum, Track, Album, Thread, Comment
 from SpotifyAPI import SpotifyAPI, SpotifyAPI_InstanceClass
 from app_tools import AppTools
