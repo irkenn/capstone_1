@@ -28,9 +28,8 @@ app.config['API_SECRET'] = os.environ.get('API_SECRET', 'not found')
 
 toolbar = DebugToolbarExtension(app)
 
-
-
 connect_db(app)
+
 
 ##############################################################################
 # User signup/login/logout

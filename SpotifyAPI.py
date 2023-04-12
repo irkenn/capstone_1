@@ -1,3 +1,4 @@
+import os
 import requests
 import base64
 from urllib.parse import urlencode
@@ -110,9 +111,9 @@ class SpotifyAPI_InstanceClass:
 
 class SpotifyAPI:
     """All the procedures required to communicate with Spotify's API"""
-    with app.app_context():
-        client_id = current_app.config.get('API_CLIENT_ID')
-        secret = current_app.config.get('API_SECRET')
+    
+    client_id = os.environ.get('API_CLIENT_ID')
+    secret = os.environ.get('API_SECRET')
     token_data = {"grant_type": "client_credentials"}
     """URL addresses"""
     url_redirect = "http://127.0.0.1:5000/home.html"
