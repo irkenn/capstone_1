@@ -95,24 +95,10 @@ class CreateSpotifyContentAndThreads(TestCase):
             response = ThreadTools.add_thread(request, spotify_id, self.testuser.id )
 
             resp = Response(response)
-            print("############## response #############", response)
             
             self.assertEqual(200, resp.status_code)
             self.assertIn(b'Radiohead', resp.data)
         
-            
-
-
-
-
-        # """Search for Spotify Content. """        
-        # resp = c.post("/search/API", data={"keywords": "Dua Lipa",
-        #                                    "form_item_type": "artist",
-        #                                     "limit": 1 })
-
-        # # html = resp.get_data(as_text=True)
-        # # self.assertIn("Dua Lipa", html)
-        # self.assertEqual(resp.status_code, 200)
 
 
 
