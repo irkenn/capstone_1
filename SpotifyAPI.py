@@ -3,6 +3,7 @@ import base64
 from urllib.parse import urlencode
 from datetime import datetime
 from flask import session, current_app
+from app import app 
 
 
 class SpotifyAPI_InstanceClass:
@@ -109,9 +110,9 @@ class SpotifyAPI_InstanceClass:
 
 class SpotifyAPI:
     """All the procedures required to communicate with Spotify's API"""
-
-    client_id = current_app.config.get('API_CLIENT_ID')
-    secret = current_app.config.get('API_SECRET')
+    with app.app_context():
+        client_id = current_app.config.get('API_CLIENT_ID')
+        secret = current_app.config.get('API_SECRET')
     token_data = {"grant_type": "client_credentials"}
     """URL addresses"""
     url_redirect = "http://127.0.0.1:5000/home.html"
