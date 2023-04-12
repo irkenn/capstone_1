@@ -3,7 +3,7 @@ import base64
 from urllib.parse import urlencode
 from datetime import datetime
 from flask import session, current_app
-from app import app 
+
 
 
 class SpotifyAPI_InstanceClass:
