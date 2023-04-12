@@ -2,7 +2,7 @@ import os
 
 from flask import Flask, render_template, request, flash, redirect, session, g, jsonify, Response
 from flask_debugtoolbar import DebugToolbarExtension
-from secrets_1 import API_CLIENT_ID, API_SECRET
+# from secrets_1 import API_CLIENT_ID, API_SECRET
 from models import db, SpotifyContent, connect_db, User, SpotifyContent, Artist, ArtistTrack, ArtistAlbum, Track, Album, Thread, Comment
 from SpotifyAPI import SpotifyAPI, SpotifyAPI_InstanceClass
 from app_tools import AppTools
@@ -23,7 +23,12 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = False
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "it's a secret")
+app.config['API_CLIENT_ID'] = os.environ.get('API_CLIENT_ID', 'not found')
+app.config['API_SECRET'] = os.environ.get('API_SECRET', 'not found')
+
 toolbar = DebugToolbarExtension(app)
+
+
 
 connect_db(app)
 
