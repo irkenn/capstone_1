@@ -34,7 +34,7 @@ function createCommentDiv(json_response){
 
 async function sendCommentToServer(userID, threadID, comment){
     
-    let response = await axios.post(`http://127.0.0.1:5000/comments/`, 
+    let response = await axios.post(`https://spotify-comments-web-app.herokuapp.com/comments/`, 
                                     {user_id:userID, thread_id:threadID, comment:comment},
                                     {headers: {'Content-Type': 'application/json'}});  
     
