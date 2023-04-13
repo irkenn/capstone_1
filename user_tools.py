@@ -35,7 +35,7 @@ class UserTools():
         """This is the user's personal page. It shows the latest threads (5 in total) from the database un a newsfeed section
          and also shows the user's activity in the page, such as threads or comments made by the user. """    
         
-        latest_threads = Thread.query.order_by(Thread.timestamp.desc()).slice(0,5).all()
+        latest_threads = Thread.query.order_by(Thread.timestamp.desc()).all()
 
         """Once the user is queried it will also contain all the threads and comments that the user has posted"""
         current_user = User.query.get_or_404(url_user_id)

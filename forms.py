@@ -48,6 +48,6 @@ class SearchDatabaseForm(FlaskForm):
 class SearchSpotifyForm(FlaskForm):
     """Form to search through Spotify's API"""
 
-    item_type = SelectField('What kind of item are you looking for...', choices=[('album', 'Album'),('artist', 'Artist'), ('track', 'Track'), ('genre', 'Genre')], validators=[DataRequired()])
+    item_type = SelectField('What kind of item are you looking for...', choices=[('album', 'Album'),('artist', 'Artist'), ('track', 'Track')], validators=[DataRequired()])
     keywords = StringField("Type here your keyword", validators=[DataRequired()])
     limit = IntegerField("Choose the amount of results", default=5, validators=[Optional(), NumberRange(min=1, max=50, message='The max number should not exeed 50') ])
