@@ -173,6 +173,13 @@ class SpotifyAPI:
         elif result == False: #don't really know if this is necessary to maintain
             print("Token is false")
 
+    @classmethod
+    def check_auth(cls):
+        """This will check if there's already a API token in the user session"""
+        if not 'SPOTIFY_COMMENTS_API_TOKEN' in session:
+            cls.credentials_in_session()
+
+            
     ################## API SEARCH SECTION ##################
 
     @classmethod
@@ -188,8 +195,6 @@ class SpotifyAPI:
             })
         search_url = f"{cls.url_base}/search?{query_data}"
         
-        if not session['SPOTIFY_COMMENTS_API_TOKEN']:
-            cls.credentials_in_session()
         
         resp = requests.get(search_url, headers=cls.current_headers())
         
@@ -205,9 +210,6 @@ class SpotifyAPI:
         """Retrieves the item from Spotify's API """
 
         url_for_item = f"{cls.url_base}/{item_type}/{spotify_id}"
-
-        if not session['SPOTIFY_COMMENTS_API_TOKEN']:
-            cls.credentials_in_session()
 
         resp = requests.get(url_for_item, headers=cls.current_headers())
 

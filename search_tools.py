@@ -35,7 +35,11 @@ class SearchTools():
 
         form = SearchSpotifyForm()
 
+
         if request.method == 'POST' and form.validate_on_submit():
+            
+            SpotifyAPI.check_auth()
+            
             keywords = form.keywords.data
             form_item_type = form.item_type.data
             limit = form.limit.data or 5
