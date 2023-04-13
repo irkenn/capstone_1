@@ -142,9 +142,10 @@ class SpotifyAPI:
             cls.url_token,
             data=cls.token_data,
             headers= cls.create_token_header()
-        )
-
+            )
+        print('¢¢¢¢¢¢¢¢¢¢¢¢¢¢¢¢¢¢¢¢∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞ this is resp', resp)
         if resp.status_code == 200:
+            print('******************************************** TOKEN CREATED')
             resp_data = resp.json()
             return resp_data
         
@@ -186,6 +187,10 @@ class SpotifyAPI:
             "offset" : f"{offset}"
             })
         search_url = f"{cls.url_base}/search?{query_data}"
+        
+        if not session['SPOTIFY_COMMENTS_API_TOKEN']:
+            cls.credentials_in_session()
+        
         resp = requests.get(search_url, headers=cls.current_headers())
         
         if resp.status_code == 401: #will this conduct to an inifinite loop?
@@ -200,6 +205,10 @@ class SpotifyAPI:
         """Retrieves the item from Spotify's API """
 
         url_for_item = f"{cls.url_base}/{item_type}/{spotify_id}"
+
+        if not session['SPOTIFY_COMMENTS_API_TOKEN']:
+            cls.credentials_in_session()
+
         resp = requests.get(url_for_item, headers=cls.current_headers())
 
         if resp.status_code == 401: #will this conduct to an inifinite loop?
