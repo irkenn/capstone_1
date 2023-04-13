@@ -143,9 +143,8 @@ class SpotifyAPI:
             data=cls.token_data,
             headers= cls.create_token_header()
             )
-        print('¢¢¢¢¢¢¢¢¢¢¢¢¢¢¢¢¢¢¢¢∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞ this is resp', resp)
+        
         if resp.status_code == 200:
-            print('******************************************** TOKEN CREATED')
             resp_data = resp.json()
             return resp_data
         
@@ -178,7 +177,6 @@ class SpotifyAPI:
         """This will check if there's already a API token in the user session"""
         if not 'SPOTIFY_COMMENTS_API_TOKEN' in session:
             cls.credentials_in_session()
-
             
     ################## API SEARCH SECTION ##################
 
