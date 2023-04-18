@@ -1,13 +1,28 @@
 # Spotify Comments Web App
 
-##### Erick Hjort
+Visit the site [here](http://spotify-comments-web-app.herokuapp.com/)
 
-#### API adress: **<https://api.spotify.com/v1>**
+## General description
 
-#### Site address: **<https://spotify-comments-web-app.herokuapp.com>**
+A site that communicates with [Spotify's API](https://developer.spotify.com/documentation/web-api), and allows users to search from Spotify's catalog and create [threads](#threads) about [Spotify's content](#spotify-content). These threads can also have comments from other users in order to start a discussion about music content.
+
+## Implemented features
+
+1. Authentication process: form validation and data encryption with the use of WTForms and bcrypt.
+
+2. Personal user profile creation page: user info can be edited or deleted, users can check other user's activity in the platform. 
+
+2. Communication with an External API: Information is obtained from Spotify's catalog, the authentication process is done automatically, tokens are renewed if they are required so. Images and relevant information is displayed on the site based on the type of item that is requested.  via API communication, but also from the site's own database.
+
+3. Caching of information: Spotify's information is cached once a thread is done. Nested information is also saved accordingly.For example in the case of a track, the site will cache the artist/s that made track, and the album to which the track belongs in its respective tables.
 
 
-**SPOTIFY COMMENTS WEB APP** is a site that communicates with Spotify's API. It will retrieve information as JSON data related to three main items: Artists, Albums and Tracks.
+2. Interconnected database models: Multiple information can be retrieved from a single query. By selecting a user, all the threads and comment that the user has made can be accessed. If a Spotify Item is selected, all the different threads from different users can be accesesed, database schema design can be found in [here](docs/Schema_design_Spotify_Comments.pdf).
+
+## User flow
+
+
+
 
 From there it will extract the necesary data used to show a thumbnail image, the name of each item, it's Spotify ID, and some other extra information.
 
@@ -23,4 +38,13 @@ The process to use the page is to regiter of log in, the user id is stored in th
 Onche the authentication is done, the user is directed to the homepage, in this page the app will show the latest threads that were created in the app, and also the onw user's latest activity. 
 From here the user can click in the nav bar to log out, edit/delete the user or search specific threads about the Spotify items or and start a thread about the selected Spotify content. If the user is using a large screen the search field will show instead a search input for the user to go directly from any page to the search threads.
 
-The app uses flask as the main web framework in which all the routes are stablished. The forms are created using WTForms, the authentication process is handed by individual handlers. The database models and the queries are made using SQL Alchemy, and all the templates used to build the app front end are done using jinja2 to create dynamic elements based upon the type of object or kind of item that is sent. The style of the HTML is done mainly with bootstrap with the help of CSS and also in several occasions the page uses JavaScript and AXIOS to add comment forms, send requests and create comment instances in the threads.
+### Spotify Content
+Artist, Albums or Tracks taken from Spotify's catalog
+It will retrieve information as JSON data related to three main items: Artists, Albums and Tracks.
+
+
+### Threads
+: The app uses flask as the main web framework in which all the routes are stablished. The forms are created using WTForms, the authentication process is handed by individual handlers. The database models and the queries are made using SQL Alchemy, and all the templates used to build the app front end are done using jinja2 to create dynamic elements based upon the type of object or kind of item that is sent. The style of the HTML is done mainly with bootstrap with the help of CSS and also in several occasions the page uses JavaScript and AXIOS to add comment forms, send requests and create comment instances in the threads.
+
+#### API adress: **<https://api.spotify.com/v1>**
+#### Site address: **<https://spotify-comments-web-app.herokuapp.com>**
