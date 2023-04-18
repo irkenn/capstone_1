@@ -1,7 +1,7 @@
 from flask import Flask, jsonify
-from models import db, connect_db, SpotifyContent, Artist, Album, Track, ArtistTrack, ArtistAlbum, Thread  
-from SpotifyAPI import SpotifyAPI
-from search_tools import SearchTools
+from database.models import db, connect_db, SpotifyContent, Artist, Album, Track, ArtistTrack, ArtistAlbum, Thread  
+from spotify_API.SpotifyAPI import SpotifyAPI
+from utilities.search_tools import SearchTools
 
 
 

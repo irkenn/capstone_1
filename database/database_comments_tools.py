@@ -1,5 +1,5 @@
 from flask import Flask, jsonify
-from models import db, connect_db, Thread, Comment
+from database.models import db, connect_db, Thread, Comment
 import json
 
 

@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request
 from forms import AddThreadForm
-from spotify_cache_tools import SpotifyCacheTools
-from models import SpotifyContent, Artist, Album, Track, Thread
-from database_comments_tools import DatabaseCommentsTools
+from spotify_API.spotify_cache_tools import SpotifyCacheTools
+from database.models import SpotifyContent, Artist, Album, Track, Thread
+from database.database_comments_tools import DatabaseCommentsTools
 
 
 class ThreadTools():

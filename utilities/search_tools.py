@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, flash, g
 from forms import SearchSpotifyForm, SearchDatabaseForm
-from SpotifyAPI import SpotifyAPI
-from models import Artist, Album, Track, Thread
+from spotify_API.SpotifyAPI import SpotifyAPI
+from database.models import Artist, Album, Track, Thread
 
 
 class SearchTools():

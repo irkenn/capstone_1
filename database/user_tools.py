@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, flash, redirect, session, g
 from forms import UserAddForm, UserEditForm, UserDeleteForm
-from models import db, connect_db, User, Thread
+from database.models import db, connect_db, User, Thread
 from sqlalchemy.exc import IntegrityError
 
 

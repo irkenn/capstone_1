@@ -1,5 +1,5 @@
 from flask import jsonify
-from database_comments_tools import DatabaseCommentsTools
+from database.database_comments_tools import DatabaseCommentsTools
 
 
 class CommentTools():

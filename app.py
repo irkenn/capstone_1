@@ -3,13 +3,13 @@ import os
 from flask import Flask, render_template, request, flash, redirect, session, g, jsonify, Response
 from flask_debugtoolbar import DebugToolbarExtension
 
-from models import db, SpotifyContent, connect_db, User, SpotifyContent, Artist, ArtistTrack, ArtistAlbum, Track, Album, Thread, Comment
-from SpotifyAPI import SpotifyAPI, SpotifyAPI_InstanceClass
-from app_tools import AppTools
-from user_tools import UserTools
-from threads_tools import ThreadTools
-from search_tools import SearchTools
-from comment_tools import CommentTools
+from database.models import db, SpotifyContent, connect_db, User, SpotifyContent, Artist, ArtistTrack, ArtistAlbum, Track, Album, Thread, Comment
+from spotify_API.SpotifyAPI import SpotifyAPI, SpotifyAPI_InstanceClass
+from utilities.app_tools import AppTools
+from database.user_tools import UserTools
+from database.threads_tools import ThreadTools
+from utilities.search_tools import SearchTools
+from database.comment_tools import CommentTools
 
 
 app = Flask(__name__)

@@ -1,5 +1,5 @@
 from flask import Flask, render_template, flash, redirect, session
-from models import User
+from database.models import User
 from forms import LoginForm
 
 class AppTools():

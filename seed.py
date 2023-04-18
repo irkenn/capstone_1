@@ -1,5 +1,5 @@
 from app import app
-from models import db, User, SpotifyContent, Artist, ArtistTrack, ArtistAlbum, Track, Album, Thread, Comment
+from database.models import db, User, SpotifyContent, Artist, ArtistTrack, ArtistAlbum, Track, Album, Thread, Comment
 
 
 db.drop_all()

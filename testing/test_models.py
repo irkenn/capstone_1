@@ -3,11 +3,11 @@
 import os
 from unittest import TestCase
 
-from models import db, User, Thread, Comment, SpotifyContent, Artist, Album, Track
+from database.models import db, User, Thread, Comment, SpotifyContent, Artist, Album, Track
 from flask import Flask, session, request, make_response, Response
 from werkzeug.datastructures import MultiDict
-from search_tools import SearchTools
-from threads_tools import ThreadTools
+from utilities.search_tools import SearchTools
+from database.threads_tools import ThreadTools
 
 os.environ['DATABASE_URL'] = "postgresql:///spotify_comments_test"
 
