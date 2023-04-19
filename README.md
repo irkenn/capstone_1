@@ -16,35 +16,48 @@ A site that communicates with [Spotify's API](https://developer.spotify.com/docu
 
 3. Caching of information: Spotify's information is cached once a thread is done. Nested information is also saved accordingly.For example in the case of a track, the site will cache the artist/s that made track, and the album to which the track belongs in its respective tables.
 
-
 2. Interconnected database models: Multiple information can be retrieved from a single query. By selecting a user, all the threads and comment that the user has made can be accessed. If a Spotify Item is selected, all the different threads from different users can be accesesed, database schema design can be found in [here](docs/Schema_design_Spotify_Comments.pdf).
 
 ## User flow
 
+Here's a diagram of the user flow on the site. 
 
+![User flor](docs/User-flow.jpeg)
 
+### User registration and first steps
 
-From there it will extract the necesary data used to show a thumbnail image, the name of each item, it's Spotify ID, and some other extra information.
+The page requires the user to register and create a profile. The user homepage is the place where the user is taken after loging in, in this page all there's a display of all the threads that exist in the database. From here the user can access to various elements from each thread. By cliking on the user that created the thread, the app will show all that user's activity on the page called other user's activity homepage in the diagram. 
 
-User's are able to retrieve this information via a form in the /search/API/ route and searching through keywords and item type.
+### Navigation through threads users and Spotify content
 
-The user can search all the main items from Spotify's API base on the keywords they type, this JSON information is passed directly from an API request and renderd in the page, only until a user starts a thread about the Spotify item. The app will cache the Spotify item, depending if it's a Artist, Album or Track. In the case of Albums or Tracks, this items will need also the caching of more elements in the database. For example if the Artist that made the Album is not found in the database, the app will also cached the Artist. The same will happen if while caching a Track, the Artist or Album asociated with the Track are not found in the database the app will search and cache them as well. Every Spotify item stored in the database will be registered in the table "spotify_content", which will associate the spotify id with the type of item that belongs to (Artist, Album, Track), this is also connected to the tables of each type of item and based on that the query is made.
+By clicking in the thread keyword, the user can see a detail page about that specific thread and from there it can add comments to the thread. By clicking on the Spotify item it will display all the threads that have been created on that Spotify item. From each of this pages the user can go back and forth those topics. 
 
-The app also requires users to register an email and password. Only logged in users are able to search for Spotify content, start threads and make comments. There are functions that can modify the user's info to a certain extent or delete the user.
+### Navbar options 
 
-Once a user logs in, the app will show the latest 5 threads that were created in the app, it will also show the user's own activity, whether it is a new thread or any comment in any thread. When a user clicks in another user, the app will show that user's latest activity, which is very similar to the own user home page except it will not show the latest 5 threads. Following the same way, if a Spotify item is clicked the app will show all the Threads about that specific item.
+The navbar options big part of the page functionality. The user can be able to return to its homepage by cliking on the app icon or in the user profile item in the menu. Also in this menu the user can modify and eliminate its profile via de efit and delete user forms. In the nav bar the search seciton will search for keywords that match the Spotify item content and will display the search results in a page. The user is also able to add a new thread form the navbar menu. 
 
-The process to use the page is to regiter of log in, the user id is stored in the session as SPOTIFY_COMMENTS_USER_KEY and also the user object is stored and pass as the g (global object) in flask. 
-Onche the authentication is done, the user is directed to the homepage, in this page the app will show the latest threads that were created in the app, and also the onw user's latest activity. 
-From here the user can click in the nav bar to log out, edit/delete the user or search specific threads about the Spotify items or and start a thread about the selected Spotify content. If the user is using a large screen the search field will show instead a search input for the user to go directly from any page to the search threads.
+### Creating a Thread
+
+The first step in this process is to find the item from Spotify's catalog. The user can search for three types if items: Artists, Albums and Tracks, the result page will be diplayed after making the query to Spotify's API. From there the results wil be displayed in the search results page, the user can select which item to start a thread on by clicking on the button, a form to start a thread is displayed and the user can type the thread title and additional comments, after submitting this, the user is taken to a detail about the thread which also sends the option to look for more threads about the same Spotify content.
 
 ### Spotify Content
-Artist, Albums or Tracks taken from Spotify's catalog
-It will retrieve information as JSON data related to three main items: Artists, Albums and Tracks.
 
+The web page extracts informtation form the API. The authentication process is done server-to-server through the [Client Credentials Flow](https://developer.spotify.com/documentation/web-api/tutorials/client-credentials-flow), form Spotify's API. The page extracts data such as Spotify ID's, artist names, song and album titles, url images, release dates and amount of tracks.
 
-### Threads
-: The app uses flask as the main web framework in which all the routes are stablished. The forms are created using WTForms, the authentication process is handed by individual handlers. The database models and the queries are made using SQL Alchemy, and all the templates used to build the app front end are done using jinja2 to create dynamic elements based upon the type of object or kind of item that is sent. The style of the HTML is done mainly with bootstrap with the help of CSS and also in several occasions the page uses JavaScript and AXIOS to add comment forms, send requests and create comment instances in the threads.
+## Caching of information
 
-#### API adress: **<https://api.spotify.com/v1>**
-#### Site address: **<https://spotify-comments-web-app.herokuapp.com>**
+The JSON information is passed directly from the API and rendered in the page. Only until a user starts a thread about the Spotify item. The app will cache the Spotify item, depending if it's a Artist, Album or Track. In the case of Albums or Tracks, this items will need also the caching of more elements in the database. For example if the Artist that made the Album is not found in the database, the app will also cached the Artist. The same will happen if while caching a Track, the Artist or Album asociated with the Track are not found in the database the app will search and cache them as well. 
+
+## Threads
+
+Threads are the main element upon the page works around, it consists of a title and a description, once a thread is done, users can add comments to the thread in order to start a discussion. A thread is linked to a cached Spotify content, and each thread belongs to a single user. Spotify items can have multiple threads and each thread can only be associated to a single Spotify content.
+
+## Technical information
+
+The app uses flask as the main web framework in which all the routes are stablished. The forms are created using WTForms, the authentication process is handed by individual handlers. The database models and the queries are made using SQL Alchemy, and all the templates used to build the app front end are done using jinja2 to create dynamic elements based upon the type of object or kind of item that is sent. The style of the HTML is done mainly with bootstrap with the help of CSS and also in several occasions the page uses JavaScript and AXIOS to add comment forms, send requests and create comment instances in the threads.
+
+### User keys in session
+
+The process to use the page is to regiter of log in, the user id is stored in the session as SPOTIFY_COMMENTS_USER_KEY and also the user object is stored and pass as the g (global object) in flask.
+
+### Site address: **<https://spotify-comments-web-app.herokuapp.com>**
